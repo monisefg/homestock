@@ -2,8 +2,7 @@
   <div>
     <button type="button" data-toggle="modal" data-target="#addProductModal" @click="showModal=true">Add</button>
 
-    <modal v-if="showModal" id="addProductModal" >
-      
+    <div v-if="showModal" id="addProductModal">
         <div class="modal-content">
          <div class="modal-header">
           <h5 class="modal-title" id="modalLabel">Add Product</h5>
@@ -15,23 +14,23 @@
         <form>
           <div class="form-group">
             <label for="product-name" class="col-form-label">Product name:</label>
-            <input type="text" class="form-control" id="product-name" required>
+            <input type="text" class="form-control" id="product-name" required v-model="name">
           </div>
           <div class="form-group">
             <label for="quantity" class="col-form-label">Quantity:</label>
-            <input type="number" class="form-control" id="quantity"/>
+            <input type="number" class="form-control" id="quantity" v-model="quantity"/>
           </div>
         </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" @click="showModal=false">Close</button>
-        <button type="button" class="btn btn-primary">Save</button>
+        <button type="button" class="btn btn-primary" @click="saveProduct()">Save</button>
       </div>
     </div>
-  </modal>
+  </div>
 
 
-    <table class="table table-striped">
+    <table class="table table-striped tableProducts">
       <thead>
         <th scope="col">#</th>
         <th scope="col">Product</th>
@@ -43,7 +42,7 @@
        <th scope="row">{{product.id}}</th>
        <td>{{product.name}}</td>
        <td> {{product.quantity}}</td>
-       <td><button>editar</button><button>excluir</button></td>
+       <td><button class="editButton" title="edit"></button><button @click="deleteProduct(product.id)" class="deleteButton" title="delete"></button></td>
       </tr>
       </tbody>
     </table>
@@ -60,9 +59,22 @@ export default {
   data(){
     return{
       products: store.products,
-      showModal : false
-      
+      showModal : false,
+      name:"",
+      quantity:null
     } 
+  },
+  methods:{
+    saveProduct(){
+    this.products.push({name:this.name,quantity:this.quantity, id:5})  
+    this.name=""
+    this.quantity=null
+    },
+
+    deleteProduct(id){
+      const newListProducts=this.products.filter((item)=> item.id!=id)
+      this.products = newListProducts
+    }
   }
  }
 
@@ -72,9 +84,31 @@ export default {
 <style scoped>
 
   #addProductModal{
-    position:absolute;
+    position: absolute;
     z-index: 1;
     align-content: center;
     align-self: center;
+    left:40%;
+    
+  }
+
+  .tableProducts{
+    width: 40%;
+    margin:auto;
+  }
+
+  .editButton{
+    width:25px;
+    height: 25px;
+    background-image: url("../assets/download.png");
+    background-size: contain;
+    margin-right:5px;
+  }
+
+  .deleteButton{
+    width:25px;
+    height: 25px;
+    background-image: url("../assets/delete.png");
+    background-size: contain;
   }
 </style>
